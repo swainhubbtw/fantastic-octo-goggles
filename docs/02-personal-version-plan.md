@@ -27,6 +27,8 @@
 5. **Updates count as telling him.** If you change the child's shoe size, a medication dose or a dentist appointment, the app automatically sends him a logged notice: "Shoe size updated to 2 (21 Oct, 7:42pm)". He can't say he didn't know.
 6. **Monthly summary email** listing every notice sent and whether he acknowledged it.
 7. **Export** to PDF for your lawyer, with verification codes.
+8. **Phone call confirmations (new).** Your plan allows phone calls, and calls leave no record. After any call, you fill in a quick form: "Confirming our call at 5:10pm today: we agreed X and Y. Please acknowledge, or reply if anything is incorrect." It goes to him as a notice with an email copy. Family lawyers commonly recommend this habit.
+9. **Unanswered requests are recorded.** Because he doesn't stick to the informal plan, the app keeps a neutral record of requests and notices he hasn't responded to, and how long each has been waiting. It shows the facts with no commentary.
 
 ### Why email copies matter so much: the "you built it" problem
 Because **you** built and control this app, your ex could argue in court that you could have changed the records. The fingerprint chain helps, but a much stronger answer is the email copy.
@@ -37,6 +39,7 @@ An email copy also means the message reaches him **even if he never installs or 
 
 ### Honest limits
 - "Opened" proves the message was opened, not that he read or understood it. The acknowledgement button is stronger. The email copy is the fallback if he never taps it.
+- **Informal plan:** because your parenting plan is informal and he doesn't follow it, consider asking him (by email, so it's on record) to agree that this app is the main channel. Or raise it at Family Dispute Resolution, where it could be written into a formal parenting plan or consent orders. Ask your lawyer which suits your situation.
 - Courts decide how much weight to give any record. Australian lawyers note that parenting matters can be more flexible about evidence than property matters, but a complete, exported, time-ordered record carries more weight than screenshots. **Before you rely on this app, ask your family lawyer:** "If I use a self-built app with email copies to both of us, will its records carry weight?" If a court order already names a specific app, keep using that app as well.
 - **Emergencies.** With type 1 diabetes in the picture, a strict "never speak" rule could be risky in a genuine emergency. I suggest an **Urgent** message type that sends a text (SMS) and a push notification, requires acknowledgement, and tells him to call if he hasn't acknowledged it within X minutes. You'd rarely need it, but it's there.
 - **Message helper (optional).** This uses the "BIFF" approach (Brief, Informative, Friendly, Firm), a well-known method for writing to a high-conflict ex. Fill-in-the-blank templates keep your messages factual and hard to argue with.
@@ -96,25 +99,55 @@ The personal-use decision makes this **much easier**:
 
 ---
 
-## 4. Technical approach for a learner
+## 4. Technical approach: hosted at home
 
-> **Analogy:** Instead of building a car from raw metal, we buy a reliable chassis and engine and build the body and interior ourselves.
+*Updated after your answers: G7 on your account; he has email and a smartphone; your informal plan says you communicate through an app and phone calls; you can host on your home network with a Forgejo repo.*
+
+> **Analogy:** Hosting at home is like running the post office out of your own house instead of renting a shop. It's cheaper and you have full control, but you're responsible for the locks, the lights staying on, and keeping your home address private from visitors.
+
+### The setup
 
 | Piece | Recommendation | Plain-English role |
 |---|---|---|
-| App type | **Web app installable on phones (a "PWA")** | Opens from a link, can be added to the home screen like a normal app, and needs **no app store**. Your ex just clicks a link. Push notifications work on iPhone (once it's added to the home screen) and on Android. |
-| Building blocks | **React + TypeScript** | A popular, well-documented way to build screens. TypeScript catches typos in code, like spell-check. |
-| Engine room (backend) | **Supabase, Sydney region** | Login, database, file storage, and security rules out of the box. Keeps data in Australia. |
-| Email copies | An email service such as **Postmark** or **Resend** | Sends the "carbon copy" emails and records delivery |
-| SMS for Urgent | **Twilio** or similar (later) | Text messages for emergencies |
-| Hosting | **Vercel** or **Netlify** | Puts the app on the internet |
-| Code storage | **GitHub** (this repository) | Saves every version of the code, like "track changes" for the whole project |
+| App type | **Installable web app (PWA)** | As before: he opens a link and adds it to his home screen, with no app store needed |
+| Screens | **React + TypeScript** | As before |
+| Engine room | **PocketBase** (replaces Supabase) | One small program that handles logins, the database, file storage and live updates. Much easier to run at home than Supabase, and ideal for learning. |
+| Packaging | **Docker** | Puts the app in a sealed "shipping container" so it runs the same anywhere and is easy to restart or move |
+| Code | **Forgejo** (your home Git server), mirroring this GitHub repo | I can only push to GitHub from these sessions, so Forgejo copies the repo automatically (a "pull mirror") and your server deploys from there |
+| Letting him in from outside | **Cloudflare Tunnel** (free; needs a domain name, ~A$15–25/year) | See below |
+| Email copies | An **outside email service** (Postmark, Resend, or your own email account via SMTP) | Still essential, and even more important now (see below) |
+| Push notifications | **Web Push**, built into browsers | Works from a home server with no extra paid service |
+| Backups | Nightly automatic backup **off the server** (e.g. an encrypted copy to cloud storage or a USB drive) | If the home server dies, the record doesn't |
 
-**Rough running cost:** likely **A$0–30 a month** at your scale, mostly on free tiers. SMS costs a few cents per message. Check current prices before signing up.
+### Reaching the app from outside your home
+Your ex isn't on your home Wi-Fi, so the app has to be reachable from the internet without exposing your home.
 
-**Privacy:** personal use is likely outside most Australian Privacy Act obligations, but it still holds your child's health information and your ex's details. We'll keep it **invite-only (just the two of you)**, encrypted, and backed up.
+| Option | Verdict |
+|---|---|
+| **Cloudflare Tunnel** | ✅ **Recommended.** Your server makes an outgoing connection to Cloudflare, so you open no doors in your router. He gets a normal web address (e.g. `family.yourname.au`) with the padlock. **Your home's internet address stays hidden**, which matters for privacy and safety. |
+| Tailscale | ⚠️ Secure, but he'd have to install and join *your* private network. That's extra friction he may refuse, and it gives him a doorway into your network. |
+| Port forwarding on your router | ❌ Not recommended. It opens a door in your home network to the whole internet and reveals your home's internet address. |
 
----
+**Safety extra:** if your router supports it, put the server on a separate network (a guest network or "VLAN"). Then even in a worst case, nobody can reach your personal laptop or phones through it.
+
+### Why self-hosting makes the email copies even more important
+The app now runs on **your** computer in **your** house, so the "you could have changed it" argument gets stronger. Two counter-measures, both built in from step 4:
+1. **Email copies to both of you.** These are independent, date-stamped records held by your email providers, which you can't edit.
+2. **Independent timestamps (new).** Once a day, the app sends the latest message "fingerprint" to a free public timestamping service, such as an RFC 3161 time-stamp authority or OpenTimestamps.
+   > **Analogy:** It's like having a Justice of the Peace stamp a sealed envelope each day. It doesn't reveal what's inside, but it proves the contents existed in exactly that form on that date. If anything were changed afterwards, it would no longer match the stamp.
+
+### Reliability at home
+If the power or internet drops, he can't open the app, and he could claim he couldn't respond. Mitigations:
+- The email copy still reaches him. Messages queue up and send when the server comes back.
+- An uptime monitor (e.g. the free Uptime Kuma, or a free external checker) logs outages, so you have a record of any downtime.
+- If you have a UPS (battery backup) for the server and router, use it.
+
+### Dexcom G7 on your account
+- **You** authorise the app once through Dexcom's login page. He sees the diary and summaries, never your Dexcom login.
+- Dexcom's sandbox has a G7 practice user ("SandboxUser7"), so we can build and test with fake data first.
+- Dexcom's login needs a "return address" for the app (a redirect address). Your Cloudflare Tunnel web address works for this.
+
+**Running cost:** the domain name (~A$15–25/year) plus electricity. Email and timestamping can stay on free tiers at your volume.
 
 ## 5. Updated plan: build order for one family
 
@@ -122,11 +155,11 @@ Each step is a small project you can finish, see working, and learn from. I'll e
 
 | Step | What you'll have | What you'll learn |
 |---|---|---|
-| **0. Setup** | Accounts (GitHub, Supabase, Vercel); a "Hello" page live on the internet | How code goes from your computer to a website |
+| **0. Setup** | Docker on your home server; Forgejo mirroring this repo; PocketBase running; a "Hello" page reachable through Cloudflare Tunnel from your phone on mobile data | How code goes from a repo to a running website, and how home hosting works |
 | **1. Paper design** (homework you can do now) | A list of the screens you want, plus every field for your child's profile | Thinking like a designer: wireframes |
 | **2. Login + family** | You and your ex can log in; nobody else can | Accounts and security rules |
 | **3. Child Passport + "What works for me"** | Profile, sizes with dates, contacts, sensory profile; updates send logged notices | Databases: tables are like spreadsheets that talk to each other |
-| **4. Messaging + notices** ⭐ core | Permanent messages, Sent/Delivered/Opened, "I've read this" button, email copies to both | How emails are sent and logged; fingerprint chains |
+| **4. Messaging + notices** ⭐ core | Permanent messages, Sent/Delivered/Opened, "I've read this" button, email copies to both, call confirmations, daily independent timestamps, off-server backups | How emails are sent and logged; fingerprint chains |
 | **5. Calendar** | Colour-coded custody schedule, appointments, swap requests | Dates and repeating events (trickier than they sound!) |
 | **6. Handover notes** | Structured handover form with acknowledgement | Forms and reusing the notice system |
 | **7. Documents vault** | Court orders, parenting plan, NDIS plan, reports | File uploads and storage |
@@ -156,3 +189,6 @@ Each step is a small project you can finish, see working, and learn from. I'll e
 - Special Learning, [Keeping things steady for your autistic child across two homes](https://special-learning.com/autism/two-homes-after-separation/)
 - National Autistic Society community, [Joint residence co-parenting tips](https://community.autism.org.uk/f/parents-and-carers/36834/joint-residence-co-parenting-tips)
 - Nelsons Law, [Living arrangements for autistic children](https://www.nelsonslaw.co.uk/living-arrangements-for-autistic-children/)
+- Cloudflare, [Cloudflare Tunnel docs](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/)
+- PocketBase, [pocketbase.io](https://pocketbase.io/)
+- Forgejo, [Repository mirrors](https://forgejo.org/docs/latest/user/repo-mirror/)
