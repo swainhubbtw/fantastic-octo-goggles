@@ -2,6 +2,8 @@
 
 *Prepared 21 October 2026. Research only. No code has been written yet.*
 
+> **Update:** The app is now a personal, single-family app for Australia. See [`02-personal-version-plan.md`](02-personal-version-plan.md) for the current plan. Sections 7 and 9 below are kept for the future, in case the app is shared more widely.
+
 ---
 
 ## 1. Your goal in one paragraph
