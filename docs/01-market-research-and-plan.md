@@ -247,7 +247,7 @@ Suggested build order (each depends on the one before):
 - Trustpilot, [OurFamilyWizard reviews](https://nz.trustpilot.com/review/www.ourfamilywizard.com)
 - OurFamilyWizard, [Info Bank support](https://support.ourfamilywizard.com/hc/en-us/sections/26332519743885-Info-Bank)
 - Justuseapp, [TalkingParents reviews](https://justuseapp.com/en/app/1092220726/talkingparents/reviews); Apple App Store, [TalkingParents](https://apps.apple.com/app/id1092220726); TalkingParents, [legal brochure](https://legal.talkingparents.com/files/digital-brochure-8-5x11.pdf)
-- AppClose, [Pricing](https://appclose.com/pricing) and [Brochure](https://appclose.com/info/AppClose-Pro-Brochure-PDF.pdf); AppFollow, [AppClose AU listing](https://apps.apple.com/app/id1019290876)
+- AppClose, [Pricing](https://appclose.com/pricing) and [Brochure](https://appclose.com/info/AppClose-Pro-Brochure-PDF.pdf); AppFollow, [AppClose AU listing](https://apps.appfollow.io/ios/appclose/1019290876?country=au)
 - BusinessWire, [BestInterest launch](https://www.businesswire.com/news/home/20241021896159/en/Frustrated-Parent-Launches-Innovative-AI-Powered-Co-Parenting-App-BestInterest); Apple App Store, [BestInterest](https://apps.apple.com/us/app/bestinterest-for-coparents/id6503981502)
 - Relationships Australia Victoria, [Smartphone apps for separated co-parents (Aug 2024)](https://relationshipsvictoria.org.au/media/uhgd5yzr/smartphone-apps-for-separated-co-parents-information-sheet_rav_aug-2024.pdf)
 - ANU, [Post-Separation Parenting App Information](https://polis.cass.anu.edu.au/files/docs/2025/6/Post-Separation-Parenting-App-Information-v6.pdf) and [Post-separation co-parenting apps project](https://csrm.cass.anu.edu.au/research/projects/post-separation-parenting-apps)
